@@ -226,7 +226,20 @@ export default function AdminPage() {
       console.log('Response data:', data);
 
       if (response.ok) {
-        setMessage('✅ Post created successfully! Refreshing page...');
+        setMessage('✅ Post created successfully! Updating cache...');
+        
+        // Trigger revalidation
+        try {
+          await fetch('/api/revalidate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+          });
+          console.log('Cache revalidated');
+        } catch (revalidateError) {
+          console.error('Revalidation failed:', revalidateError);
+        }
+        
         setPostForm({
           title: '',
           slug: '',
@@ -239,13 +252,11 @@ export default function AdminPage() {
           featured: false,
           tags: ''
         });
+        
         // Scroll to top to show success message
         window.scrollTo({ top: 0, behavior: 'smooth' });
         
-        // Refresh the page after 2 seconds to show the new post
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+        setMessage('✅ Post created successfully! You can now view it on the blog page.');
       } else {
         console.error('Error response:', data);
         setMessage(`❌ Error: ${data.error || 'Unknown error'}`);

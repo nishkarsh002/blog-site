@@ -4,6 +4,10 @@ import BlogCard from "@/components/BlogCard";
 import Link from "next/link";
 import { getAllPosts } from "@/app/lib/posts";
 
+// Force dynamic rendering and disable caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function BlogPage() {
   const posts = await getAllPosts();
   const categories = [...new Set(posts.map(post => post.category))];

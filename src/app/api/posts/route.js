@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import dbConnect from '@/app/lib/dbConnect';
 import Post from '@/app/models/Post';
 
@@ -66,6 +67,16 @@ export async function POST(request) {
     
     const post = await Post.create(body);
     console.log('Post created successfully:', post._id);
+    
+    // Revalidate pages to show new content
+    try {
+      revalidatePath('/');
+      revalidatePath('/blog');
+      revalidatePath(`/blog/${post.slug}`);
+      console.log('Pages revalidated successfully');
+    } catch (revalidateError) {
+      console.error('Error revalidating pages:', revalidateError);
+    }
     
     return NextResponse.json({ 
       success: true,

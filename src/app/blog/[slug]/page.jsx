@@ -2,6 +2,10 @@ import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { getPostBySlug } from "@/app/lib/posts";
 
+// Force dynamic rendering and disable caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function BlogPostPage({ params }) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
