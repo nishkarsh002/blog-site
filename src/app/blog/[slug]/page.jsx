@@ -1,27 +1,10 @@
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
-
-async function getPost(slug) {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/posts/${slug}`, {
-      cache: 'no-store'
-    });
-    
-    if (!res.ok) {
-      return null;
-    }
-    
-    const data = await res.json();
-    return data.post;
-  } catch (error) {
-    console.error('Error fetching post:', error);
-    return null;
-  }
-}
+import { getPostBySlug } from "@/app/lib/posts";
 
 export default async function BlogPostPage({ params }) {
   const { slug } = await params;
-  const post = await getPost(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     return (

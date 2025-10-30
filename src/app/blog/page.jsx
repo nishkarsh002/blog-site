@@ -2,27 +2,10 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogCard from "@/components/BlogCard";
 import Link from "next/link";
-
-async function getPosts() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/posts`, {
-      cache: 'no-store'
-    });
-
-    if (!res.ok) {
-      throw new Error('Failed to fetch posts');
-    }
-
-    const data = await res.json();
-    return data.posts || [];
-  } catch (error) {
-    console.error('Error fetching posts:', error);
-    return [];
-  }
-}
+import { getAllPosts } from "@/app/lib/posts";
 
 export default async function BlogPage() {
-  const posts = await getPosts();
+  const posts = await getAllPosts();
   const categories = [...new Set(posts.map(post => post.category))];
   const featuredPosts = posts.filter(post => post.featured);
   const regularPosts = posts.filter(post => !post.featured);

@@ -2,47 +2,12 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogCard from "@/components/BlogCard";
 import Link from "next/link";
-
-async function getFeaturedPosts() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/posts?featured=true&limit=3`, {
-      cache: 'no-store'
-    });
-    
-    if (!res.ok) {
-      return [];
-    }
-    
-    const data = await res.json();
-    return data.posts || [];
-  } catch (error) {
-    console.error('Error fetching featured posts:', error);
-    return [];
-  }
-}
-
-async function getRecentPosts() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/posts?limit=6`, {
-      cache: 'no-store'
-    });
-    
-    if (!res.ok) {
-      return [];
-    }
-    
-    const data = await res.json();
-    return data.posts || [];
-  } catch (error) {
-    console.error('Error fetching recent posts:', error);
-    return [];
-  }
-}
+import { getFeaturedPosts, getRecentPosts } from "@/app/lib/posts";
 
 export default async function HomePage() {
   const [featuredPosts, recentPosts] = await Promise.all([
-    getFeaturedPosts(),
-    getRecentPosts()
+    getFeaturedPosts(3),
+    getRecentPosts(6)
   ]);
 
   return (
