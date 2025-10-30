@@ -211,6 +211,8 @@ export default function AdminPage() {
         tags: postForm.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
       };
 
+      console.log('Submitting post data:', postData);
+
       const response = await fetch('/api/posts', {
         method: 'POST',
         headers: {
@@ -219,10 +221,12 @@ export default function AdminPage() {
         body: JSON.stringify(postData),
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (response.ok) {
-        setMessage('✅ Post created successfully!');
+        setMessage('✅ Post created successfully! Refreshing page...');
         setPostForm({
           title: '',
           slug: '',
@@ -237,11 +241,21 @@ export default function AdminPage() {
         });
         // Scroll to top to show success message
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Refresh the page after 2 seconds to show the new post
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       } else {
-        setMessage(`❌ Error: ${data.error}`);
+        console.error('Error response:', data);
+        setMessage(`❌ Error: ${data.error || 'Unknown error'}`);
+        if (data.details) {
+          console.error('Error details:', data.details);
+        }
       }
     } catch (error) {
-      setMessage(`❌ Error: ${error.message}`);
+      console.error('Network error:', error);
+      setMessage(`❌ Network Error: ${error.message}`);
     } finally {
       setIsCreating(false);
     }

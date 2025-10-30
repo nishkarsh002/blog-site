@@ -32,16 +32,71 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
+    console.log('POST /api/posts - Starting post creation');
     await dbConnect();
+    console.log('Database connected successfully');
     
     const body = await request.json();
-    const post = await Post.create(body);
+    console.log('Request body received:', JSON.stringify(body, null, 2));
     
-    return NextResponse.json({ post }, { status: 201 });
+    // Validate required fields
+    if (!body.title || !body.slug || !body.excerpt || !body.content || !body.category) {
+      console.error('Missing required fields:', {
+        title: !!body.title,
+        slug: !!body.slug,
+        excerpt: !!body.excerpt,
+        content: !!body.content,
+        category: !!body.category
+      });
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+    
+    // Check if slug already exists
+    const existingPost = await Post.findOne({ slug: body.slug });
+    if (existingPost) {
+      console.error('Slug already exists:', body.slug);
+      return NextResponse.json(
+        { error: 'A post with this slug already exists' },
+        { status: 409 }
+      );
+    }
+    
+    const post = await Post.create(body);
+    console.log('Post created successfully:', post._id);
+    
+    return NextResponse.json({ 
+      success: true,
+      post: {
+        _id: post._id,
+        title: post.title,
+        slug: post.slug,
+        createdAt: post.createdAt
+      }
+    }, { status: 201 });
   } catch (error) {
     console.error('Error creating post:', error);
+    
+    // Handle specific MongoDB errors
+    if (error.code === 11000) {
+      return NextResponse.json(
+        { error: 'A post with this slug already exists' },
+        { status: 409 }
+      );
+    }
+    
+    if (error.name === 'ValidationError') {
+      const validationErrors = Object.values(error.errors).map(err => err.message);
+      return NextResponse.json(
+        { error: 'Validation failed', details: validationErrors },
+        { status: 400 }
+      );
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to create post' },
+      { error: 'Failed to create post', details: error.message },
       { status: 500 }
     );
   }
