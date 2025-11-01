@@ -43,6 +43,7 @@ npm run dev</code></pre>
     author: 'John Doe',
     category: 'Tutorial',
     readTime: 8,
+    views: 1247,
     image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&h=600&fit=crop',
     featured: true,
     tags: ['Next.js', 'React', 'JavaScript', 'Web Development']
@@ -75,6 +76,7 @@ npm run dev</code></pre>
     author: 'Jane Smith',
     category: 'CSS',
     readTime: 6,
+    views: 892,
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=600&fit=crop',
     featured: true,
     tags: ['CSS', 'Grid', 'Flexbox', 'Layout']
@@ -105,6 +107,7 @@ const message = \`Hello, \${name}!\`;</code></pre>
     author: 'Mike Johnson',
     category: 'JavaScript',
     readTime: 10,
+    views: 1534,
     image: 'https://images.unsplash.com/photo-1579468118864-1b9ea3c0db4a?w=1200&h=600&fit=crop',
     featured: true,
     tags: ['JavaScript', 'ES6', 'Best Practices', 'Clean Code']
@@ -142,6 +145,7 @@ app.listen(3000, () => {
     author: 'Sarah Wilson',
     category: 'Backend',
     readTime: 12,
+    views: 743,
     image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=600&fit=crop',
     tags: ['Node.js', 'Express', 'API', 'Backend']
   },
@@ -172,6 +176,7 @@ const increment = () => {
     author: 'Alex Chen',
     category: 'React',
     readTime: 9,
+    views: 1089,
     image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1200&h=600&fit=crop',
     tags: ['React', 'Hooks', 'useState', 'useEffect']
   },
@@ -206,6 +211,7 @@ CREATE INDEX idx_post_created_at ON posts(created_at DESC);</code></pre>
     author: 'David Kumar',
     category: 'Database',
     readTime: 15,
+    views: 567,
     image: 'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=1200&h=600&fit=crop',
     tags: ['Database', 'SQL', 'Design', 'Normalization']
   }

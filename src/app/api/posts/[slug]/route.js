@@ -6,7 +6,7 @@ export async function GET(request, { params }) {
   try {
     await dbConnect();
     
-    const { slug } = params;
+    const { slug } = await params;
     const post = await Post.findOne({ slug, published: true }).lean();
     
     if (!post) {

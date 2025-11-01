@@ -10,10 +10,11 @@ export async function getFeaturedPosts(limit = 3) {
       .limit(limit)
       .lean();
     
-    // Convert MongoDB ObjectId to string
+    // Convert MongoDB ObjectId to string and ensure views is a number
     return posts.map(post => ({
       ...post,
       _id: post._id.toString(),
+      views: Number(post.views) || 0,
       createdAt: post.createdAt.toISOString(),
       updatedAt: post.updatedAt.toISOString()
     }));
@@ -31,10 +32,11 @@ export async function getAllPosts() {
       .sort({ createdAt: -1 })
       .lean();
     
-    // Convert MongoDB ObjectId to string
+    // Convert MongoDB ObjectId to string and ensure views is a number
     return posts.map(post => ({
       ...post,
       _id: post._id.toString(),
+      views: Number(post.views) || 0,
       createdAt: post.createdAt.toISOString(),
       updatedAt: post.updatedAt.toISOString()
     }));
@@ -53,10 +55,11 @@ export async function getRecentPosts(limit = 6) {
       .limit(limit)
       .lean();
     
-    // Convert MongoDB ObjectId to string
+    // Convert MongoDB ObjectId to string and ensure views is a number
     return posts.map(post => ({
       ...post,
       _id: post._id.toString(),
+      views: Number(post.views) || 0,
       createdAt: post.createdAt.toISOString(),
       updatedAt: post.updatedAt.toISOString()
     }));
@@ -76,10 +79,11 @@ export async function getPostBySlug(slug) {
       return null;
     }
     
-    // Convert MongoDB ObjectId to string
+    // Convert MongoDB ObjectId to string and ensure views is a number
     return {
       ...post,
       _id: post._id.toString(),
+      views: Number(post.views) || 0,
       createdAt: post.createdAt.toISOString(),
       updatedAt: post.updatedAt.toISOString()
     };
