@@ -4,12 +4,12 @@ import Post from '@/app/models/Post';
 
 export async function POST(request, { params }) {
   try {
-    console.log('POST /api/posts/[slug]/views - Starting view tracking');
+    console.log('POST /api/posts/[slug]/views - Starting engagement-based view tracking (100s requirement)');
     await dbConnect();
     console.log('Database connected');
     
     const { slug } = await params;
-    console.log('Tracking view for slug:', slug);
+    console.log('Tracking engaged view for slug:', slug);
     
     // Increment view count
     const post = await Post.findOneAndUpdate(
@@ -26,7 +26,7 @@ export async function POST(request, { params }) {
       );
     }
     
-    console.log('View tracked successfully. New view count:', post.views);
+    console.log('Engaged view tracked successfully (100s+ engagement). New view count:', post.views);
     return NextResponse.json({ 
       success: true, 
       views: post.views 

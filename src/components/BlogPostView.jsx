@@ -6,6 +6,9 @@ import Link from "next/link";
 export default function BlogPostView({ post }) {
   const [views, setViews] = useState(Number(post.views) || 0);
   const [hasTracked, setHasTracked] = useState(false);
+  const [timeSpent, setTimeSpent] = useState(0);
+  const [showEngagementIndicator, setShowEngagementIndicator] = useState(false);
+  const [indicatorDismissed, setIndicatorDismissed] = useState(false);
 
   useEffect(() => {
     // Track view when component mounts (only once per session)
@@ -13,7 +16,7 @@ export default function BlogPostView({ post }) {
       if (hasTracked) return;
       
       try {
-        console.log('Tracking view for post:', post.slug);
+        console.log('Tracking view for post after 100 seconds:', post.slug);
         const response = await fetch(`/api/posts/${post.slug}/views`, {
           method: 'POST',
         });
@@ -25,6 +28,7 @@ export default function BlogPostView({ post }) {
           console.log('View tracking response data:', data);
           setViews(Number(data.views) || 0);
           setHasTracked(true);
+          setShowEngagementIndicator(false);
         } else {
           const errorData = await response.json();
           console.error('View tracking failed:', errorData);
@@ -34,10 +38,26 @@ export default function BlogPostView({ post }) {
       }
     };
 
-    // Delay tracking to avoid counting quick bounces
-    const timer = setTimeout(trackView, 2000);
+    // Show engagement indicator after 30 seconds
+    const indicatorTimer = setTimeout(() => {
+      if (!hasTracked && !indicatorDismissed) {
+        setShowEngagementIndicator(true);
+      }
+    }, 30000);
+
+    // Track view after 100 seconds of engagement
+    const trackingTimer = setTimeout(trackView, 100000);
     
-    return () => clearTimeout(timer);
+    // Update time spent counter every second
+    const timeCounter = setInterval(() => {
+      setTimeSpent(prev => prev + 1);
+    }, 1000);
+    
+    return () => {
+      clearTimeout(indicatorTimer);
+      clearTimeout(trackingTimer);
+      clearInterval(timeCounter);
+    };
   }, [post.slug, hasTracked]);
 
   const formatDate = (dateString) => {
@@ -50,6 +70,33 @@ export default function BlogPostView({ post }) {
 
   return (
     <article className="max-w-4xl mx-auto py-12">
+      {/* Engagement Indicator */}
+      {showEngagementIndicator && !hasTracked && !indicatorDismissed && (
+        <div className="fixed bottom-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse max-w-sm">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-sm">
+              <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <span>Keep reading to count as a view! ({Math.max(0, 100 - timeSpent)}s)</span>
+            </div>
+            <button
+              onClick={() => {
+                setIndicatorDismissed(true);
+                setShowEngagementIndicator(false);
+              }}
+              className="flex-shrink-0 ml-2 p-1 hover:bg-blue-700 rounded transition-colors"
+              aria-label="Dismiss notification"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="mb-8">
         <Link 
