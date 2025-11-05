@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Navbar from "@/components/Navbar";
+import PostManager from "@/components/PostManager";
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -11,6 +12,7 @@ export default function AdminPage() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [message, setMessage] = useState('');
+  const [activeTab, setActiveTab] = useState('create');
   
   // Post creation states
   const [isCreating, setIsCreating] = useState(false);
@@ -254,7 +256,9 @@ export default function AdminPage() {
         });
         
         // Scroll to top to show success message
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (typeof window !== 'undefined') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
         
         setMessage('✅ Post created successfully! You can now view it on the blog page.');
       } else {
@@ -358,8 +362,8 @@ export default function AdminPage() {
             <div className="border-b border-gray-200 px-8 py-6">
               <div className="flex justify-between items-center">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Create New Post</h1>
-                  <p className="text-gray-600 mt-2">Share your knowledge with the world</p>
+                  <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
+                  <p className="text-gray-600 mt-2">Manage your blog content</p>
                 </div>
                 <button
                   onClick={() => {
@@ -374,6 +378,32 @@ export default function AdminPage() {
               </div>
             </div>
 
+            {/* Tabs */}
+            <div className="border-b border-gray-200">
+              <nav className="flex space-x-8 px-8">
+                <button
+                  onClick={() => setActiveTab('create')}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'create'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Create Post
+                </button>
+                <button
+                  onClick={() => setActiveTab('manage')}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'manage'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
+                  }`}
+                >
+                  Manage Posts
+                </button>
+              </nav>
+            </div>
+
             {/* Content */}
             <div className="p-8">
               {message && (
@@ -382,23 +412,24 @@ export default function AdminPage() {
                 </div>
               )}
 
-              <div>
-                <div className="mb-6 flex justify-between items-center">
-                  <div className="space-y-2">
-                    <a 
-                      href="/blog" 
-                      className="block text-blue-600 hover:text-blue-800 hover:underline"
-                    >
-                      → View All Blog Posts
-                    </a>
-                    <a 
-                      href="/" 
-                      className="block text-blue-600 hover:text-blue-800 hover:underline"
-                    >
-                      → Back to Homepage
-                    </a>
+              {activeTab === 'create' && (
+                <div>
+                  <div className="mb-6 flex justify-between items-center">
+                    <div className="space-y-2">
+                      <a 
+                        href="/blog" 
+                        className="block text-blue-600 hover:text-blue-800 hover:underline"
+                      >
+                        → View All Blog Posts
+                      </a>
+                      <a 
+                        href="/" 
+                        className="block text-blue-600 hover:text-blue-800 hover:underline"
+                      >
+                        → Back to Homepage
+                      </a>
+                    </div>
                   </div>
-                </div>
                   
                   <form onSubmit={handleCreatePost} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-6">
@@ -708,6 +739,11 @@ export default function AdminPage() {
                     </div>
                   </form>
                 </div>
+              )}
+
+              {activeTab === 'manage' && (
+                <PostManager />
+              )}
             </div>
           </div>
         </div>

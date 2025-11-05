@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogCard from "@/components/BlogCard";
+import PopularPosts from "@/components/PopularPosts";
 import Link from "next/link";
 import { getFeaturedPosts, getRecentPosts } from "@/app/lib/posts";
 
@@ -128,10 +129,22 @@ export default async function HomePage() {
                 <p className="text-xl text-gray-600">Stay updated with our newest content</p>
               </div>
               
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {recentPosts.slice(0, 6).map((post) => (
-                  <BlogCard key={post.slug} post={post} />
-                ))}
+              <div className="grid lg:grid-cols-4 gap-8">
+                {/* Recent Posts */}
+                <div className="lg:col-span-3">
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {recentPosts.slice(0, 6).map((post) => (
+                      <BlogCard key={post.slug} post={post} />
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Sidebar with Popular Posts */}
+                <div className="lg:col-span-1">
+                  <div className="sticky top-24">
+                    <PopularPosts limit={5} />
+                  </div>
+                </div>
               </div>
             </div>
           </section>

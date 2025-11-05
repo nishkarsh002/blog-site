@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import BlogPostView from "@/components/BlogPostView";
+import RelatedPosts from "@/components/RelatedPosts";
 import { getPostBySlug } from "@/app/lib/posts";
 
 // Force dynamic rendering and disable caching
@@ -36,6 +37,9 @@ export default async function BlogPostPage({ params }) {
       <Navbar />
       <div className="pt-20 px-4">
         <BlogPostView post={post} />
+        <div className="max-w-4xl mx-auto">
+          <RelatedPosts currentPost={post} />
+        </div>
       </div>
     </main>
   );

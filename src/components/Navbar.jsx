@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import SearchBar from './SearchBar';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,7 +22,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             <Link 
               href="/" 
               className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
@@ -40,12 +41,12 @@ export default function Navbar() {
             >
               About
             </Link>
-            <Link 
-              href="#newsletter" 
-              className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
-            >
-              Newsletter
-            </Link>
+            
+            {/* Search Bar */}
+            <div className="w-64">
+              <SearchBar />
+            </div>
+            
             <Link 
               href="/admin" 
               className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-2 rounded-full hover:from-green-600 hover:to-green-700 transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
